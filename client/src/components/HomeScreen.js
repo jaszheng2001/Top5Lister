@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 
 import HomeNav from "./HomeNav";
 import NavTab from "./NavTab";
-import RegisterScreen from "./RegisterScreen";
+import UserList from "./UserList";
 
 import { MemoryRouter, Route, Switch } from "react-router-dom";
+import AllList from "./AllList";
+import Community from "./Community";
 /*
     
     @author McKilla Gorilla
@@ -15,9 +17,9 @@ const HomeScreen = () => {
 			<NavTab />
 			<Switch>
 				<Route exact path="/home" component={HomeNav} />
-				<Route exact path="/me" component={RegisterScreen} />
-				<Route exact path="/all" component={RegisterScreen} />
-				<Route exact path="/community" component={RegisterScreen} />
+				<Route exact path="/all" component={AllList} />
+				<Route exact path="/user" component={UserList} />
+				<Route exact path="/community" component={Community} />
 			</Switch>
 		</MemoryRouter>
 	);

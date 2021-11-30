@@ -53,6 +53,7 @@ export default function ListCard(props) {
 				padding: "0 10px",
 				boxSizing: "border-box",
 				borderRadius: "10px",
+				bgcolor: "#d4d4f5",
 			}}
 		>
 			<CardContent sx={cardContentStyle}>
@@ -78,6 +79,7 @@ export default function ListCard(props) {
 			</CardContent>
 			<CardContent sx={{ ...cardContentStyle, paddingTop: 0 }}>
 				<Typography variant="p">By: McGorilla</Typography>
+				<Typography variant="p">Published: January 2021</Typography>
 			</CardContent>
 			<CardActions disableSpacing sx={{ padding: "0 10px" }}>
 				<div id="rate-btn-wrapper">

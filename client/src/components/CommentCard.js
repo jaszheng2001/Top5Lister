@@ -14,7 +14,10 @@ const card = (
 			"&:last-child": { paddingBottom: "10px" },
 		}}
 	>
-		<Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+		<Typography
+			sx={{ fontSize: 12, color: "#2c2f70", fontWeight: "600" }}
+			gutterBottom
+		>
 			Username
 		</Typography>
 		<Typography variant="body2">lorem ipsum dsfsd snfs;dalndsn</Typography>
@@ -24,7 +27,12 @@ const card = (
 export default function OutlinedCard() {
 	return (
 		<Box sx={{ minWidth: 275, paddingBottom: "10px" }}>
-			<Card variant="outlined">{card}</Card>
+			<Card
+				variant="outlined"
+				style={{ borderRadius: "10px", borderColor: "black" }}
+			>
+				{card}
+			</Card>
 		</Box>
 	);
 }

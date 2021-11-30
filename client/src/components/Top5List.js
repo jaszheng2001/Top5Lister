@@ -11,47 +11,80 @@ import CommentCard from "./CommentCard";
 import CommentField from "./CommentField";
 
 export default function Top5List() {
+	const listItemStyle = { paddingTop: "0", paddingBottom: "0" };
 	return (
 		<div id="list-wrapper">
 			<div id="top5list" className="top5list-inner">
-				<List sx={{ color: "#d4af36" }}>
-					<ListItem>
+				<List sx={{ color: "#d4af36", justifyContent: "center" }}>
+					<ListItem sx={listItemStyle}>
 						<ListItemIcon sx={{ color: "#d4af36" }}>
 							<Typography variant="h4">1.</Typography>
 						</ListItemIcon>
-						<Typography variant="h5">
-							Shine on You Crazy Diamond
-						</Typography>
+						<ListItemText
+							primaryTypographyProps={{ fontSize: "1.4rem" }}
+							secondaryTypographyProps={{
+								fontSize: ".7rem",
+								color: "#d4af36",
+							}}
+							primary={"Shine on You Crazy Diamond"}
+							secondary={"10 Votes"}
+						/>
 					</ListItem>
-					<ListItem>
+					<ListItem sx={listItemStyle}>
 						<ListItemIcon style={{ color: "#d4af36" }}>
 							<Typography variant="h4">2.</Typography>
 						</ListItemIcon>
-						<Typography variant="h5">
-							Shine on You Crazy Diamond
-						</Typography>
+						<ListItemText
+							primaryTypographyProps={{ fontSize: "1.4rem" }}
+							secondaryTypographyProps={{
+								fontSize: ".7rem",
+								color: "#d4af36",
+							}}
+							primary={"Shine on You Crazy Diamond"}
+							secondary={"100 votes"}
+						/>
 					</ListItem>
-					<ListItem>
+					<ListItem sx={listItemStyle}>
 						<ListItemIcon style={{ color: "#d4af36" }}>
 							<Typography variant="h4">3.</Typography>
 						</ListItemIcon>
-						<Typography variant="h5">
-							Shine on You Crazy Diamond
-						</Typography>
+						<ListItemText
+							primaryTypographyProps={{ fontSize: "1.4rem" }}
+							secondaryTypographyProps={{
+								color: "#d4af36",
+								fontSize: ".7rem",
+							}}
+							primary={"Shine on You Crazy Diamond"}
+							secondary={"100 votes"}
+						/>
 					</ListItem>
-					<ListItem>
+					<ListItem sx={listItemStyle}>
 						<ListItemIcon style={{ color: "#d4af36" }}>
 							<Typography variant="h4">4.</Typography>
 						</ListItemIcon>
-						<Typography variant="h5">
-							Shine on You Crazy Diamond
-						</Typography>
+						<ListItemText
+							primaryTypographyProps={{ fontSize: "1.4rem" }}
+							secondaryTypographyProps={{
+								color: "#d4af36",
+								fontSize: ".7rem",
+							}}
+							primary={"Shine on You Crazy Diamond"}
+							secondary={"5 Votes"}
+						/>
 					</ListItem>
-					<ListItem>
+					<ListItem sx={listItemStyle}>
 						<ListItemIcon style={{ color: "#d4af36" }}>
 							<Typography variant="h4">5.</Typography>
 						</ListItemIcon>
-						<Typography variant="h5">ITEM 5</Typography>
+						<ListItemText
+							primaryTypographyProps={{ fontSize: "1.4rem" }}
+							secondaryTypographyProps={{
+								color: "#d4af36",
+								fontSize: ".7rem",
+							}}
+							primary={"Shine on You Crazy Diamond"}
+							secondary={"100 votes"}
+						/>
 					</ListItem>
 				</List>
 			</div>
