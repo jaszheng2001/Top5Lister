@@ -10,7 +10,15 @@ createTop5List = (req, res) => {
 			error: "You must provide a Top 5 List",
 		});
 	}
-	const top5List = new Top5List(body);
+	const top5List = new Top5List({
+		...body,
+		username: req.username,
+		likes: 0,
+		dislikes: 0,
+		views: 0,
+		comments: [],
+	});
+
 	console.log("creating top5List: " + JSON.stringify(top5List));
 	if (!top5List) {
 		return res.status(400).json({ success: false, error: err });
@@ -26,6 +34,7 @@ createTop5List = (req, res) => {
 			});
 		})
 		.catch((error) => {
+			console.log(error);
 			return res.status(400).json({
 				error,
 				message: "Top 5 List Not Created!",

@@ -11,7 +11,7 @@ export default function HomeNav() {
 	const { store } = useContext(GlobalStoreContext);
 	console.log("Home Screen was rendered");
 	useEffect(() => {
-		store.loadIdNamePairs();
+		store.loadList();
 	}, []);
 
 	function handleCreateNewList() {
@@ -28,12 +28,8 @@ export default function HomeNav() {
 					height: "90%",
 				}}
 			>
-				{store.idNamePairs.map((pair) => (
-					<ListCard
-						key={pair._id}
-						idNamePair={pair}
-						selected={false}
-					/>
+				{store.idNamePairs.map((list) => (
+					<ListCard key={list._id} list={list} />
 				))}
 			</List>
 		);

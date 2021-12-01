@@ -29,10 +29,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function ListCard(props) {
-	const { store } = useContext(GlobalStoreContext);
-	const [editActive, setEditActive] = useState(false);
-	const [text, setText] = useState("");
-	const { idNamePair } = props;
+	const { list } = props;
 	const [expanded, setExpanded] = React.useState(false);
 
 	const cardContentStyle = {
@@ -62,7 +59,7 @@ export default function ListCard(props) {
 					color="text.primary"
 					sx={{ margin: "auto 0" }}
 				>
-					List Name
+					{list.name}
 				</Typography>
 				<div>
 					<IconButton aria-label="edit" size="large">
@@ -78,7 +75,7 @@ export default function ListCard(props) {
 				</div>
 			</CardContent>
 			<CardContent sx={{ ...cardContentStyle, paddingTop: 0 }}>
-				<Typography variant="p">By: McGorilla</Typography>
+				<Typography variant="p">By: {list.username}</Typography>
 				<Typography variant="p">Published: January 2021</Typography>
 			</CardContent>
 			<CardActions disableSpacing sx={{ padding: "0 10px" }}>

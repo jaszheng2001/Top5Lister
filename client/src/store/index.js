@@ -21,7 +21,7 @@ export const GlobalStoreActionType = {
 	CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
 	CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
 	CREATE_NEW_LIST: "CREATE_NEW_LIST",
-	LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
+	LOAD_LIST: "LOAD_LIST",
 	MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
 	UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
 	SET_CURRENT_LIST: "SET_CURRENT_LIST",
@@ -94,7 +94,7 @@ function GlobalStoreContextProvider(props) {
 				});
 			}
 			// GET ALL THE LISTS SO WE CAN PRESENT THEM
-			case GlobalStoreActionType.LOAD_ID_NAME_PAIRS: {
+			case GlobalStoreActionType.LOAD_LIST: {
 				console.log("Load ID pair Reducer");
 				return setStore({
 					idNamePairs: payload,
@@ -255,12 +255,12 @@ function GlobalStoreContextProvider(props) {
 	};
 
 	// THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
-	store.loadIdNamePairs = async function () {
-		const response = await api.getTop5ListPairs();
+	store.loadList = async function () {
+		const response = await api.getAllTop5Lists();
 		if (response.data.success) {
-			let pairsArray = response.data.idNamePairs;
+			let pairsArray = response.data.data;
 			storeReducer({
-				type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+				type: GlobalStoreActionType.LOAD_LIST,
 				payload: pairsArray,
 			});
 		} else {

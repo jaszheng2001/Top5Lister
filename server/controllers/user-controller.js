@@ -25,9 +25,22 @@ getLoggedIn = async (req, res) => {
 
 registerUser = async (req, res) => {
 	try {
-		const { firstName, lastName, email, password, passwordVerify } =
-			req.body;
-		if (!firstName || !lastName || !email || !password || !passwordVerify) {
+		const {
+			firstName,
+			lastName,
+			email,
+			password,
+			passwordVerify,
+			username,
+		} = req.body;
+		if (
+			!firstName ||
+			!lastName ||
+			!email ||
+			!password ||
+			!passwordVerify ||
+			!username
+		) {
 			return res
 				.status(400)
 				.json({ errorMessage: "Please enter all required fields." });
@@ -59,6 +72,7 @@ registerUser = async (req, res) => {
 		const newUser = new User({
 			firstName,
 			lastName,
+			username,
 			email,
 			passwordHash,
 		});

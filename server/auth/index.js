@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user-model");
 
 function authManager() {
-	verify = function (req, res, next) {
+	verify = async function (req, res, next) {
 		try {
 			const token = req.cookies.token;
 			if (!token) {
@@ -14,6 +15,14 @@ function authManager() {
 
 			const verified = jwt.verify(token, process.env.JWT_SECRET);
 			req.userId = verified.userId;
+			try {
+				const user = await User.findById(req.userId);
+				req.username = user.username;
+			} catch (err) {
+				return res
+					.status(401)
+					.json({ success: false, error: "Unauthorized" });
+			}
 
 			next();
 		} catch (err) {
