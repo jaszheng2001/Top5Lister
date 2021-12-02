@@ -9,7 +9,14 @@ router.put("/top5list/:id", auth.verify, Top5ListController.updateTop5List);
 router.delete("/top5list/:id", auth.verify, Top5ListController.deleteTop5List);
 router.get("/top5list/:id", auth.verify, Top5ListController.getTop5ListById);
 router.get("/top5lists", auth.verify, Top5ListController.getTop5Lists);
+router.get("/top5listsUser", auth.verify, Top5ListController.getTop5ListsUser);
 router.get("/top5listpairs", auth.verify, Top5ListController.getTop5ListPairs);
+
+router.post(
+	"/top5list/:id/comments",
+	auth.verify,
+	Top5ListController.createComment
+);
 
 router.post("/register", UserController.registerUser);
 router.post("/login", UserController.loginUser);

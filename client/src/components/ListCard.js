@@ -29,7 +29,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function ListCard(props) {
-	const { list } = props;
+	const { list, enableToolbar } = props;
 	const [expanded, setExpanded] = React.useState(false);
 
 	const cardContentStyle = {
@@ -61,18 +61,20 @@ export default function ListCard(props) {
 				>
 					{list.name}
 				</Typography>
-				<div>
-					<IconButton aria-label="edit" size="large">
-						<EditIcon fontSize="inherit" />
-					</IconButton>
-					<IconButton
-						aria-label="delete"
-						size="large"
-						sx={{ margin: 0 }}
-					>
-						<DeleteIcon fontSize="inherit" />
-					</IconButton>
-				</div>
+				{!enableToolbar || (
+					<div>
+						<IconButton aria-label="edit" size="large">
+							<EditIcon fontSize="inherit" />
+						</IconButton>
+						<IconButton
+							aria-label="delete"
+							size="large"
+							sx={{ margin: 0 }}
+						>
+							<DeleteIcon fontSize="inherit" />
+						</IconButton>
+					</div>
+				)}
 			</CardContent>
 			<CardContent sx={{ ...cardContentStyle, paddingTop: 0 }}>
 				<Typography variant="p">By: {list.username}</Typography>
@@ -89,7 +91,7 @@ export default function ListCard(props) {
 						</IconButton>
 						<div>
 							<Typography variant="p" color="text.secondary">
-								100
+								{list.likes}
 							</Typography>
 						</div>
 					</div>
@@ -101,13 +103,13 @@ export default function ListCard(props) {
 							<ThumbDownIcon />
 						</IconButton>
 						<Typography variant="p" color="text.secondary">
-							1000
+							{list.dislikes}
 						</Typography>
 					</div>
 					<div style={{ display: "flex", alignItems: "center" }}>
 						<VisibilityIcon sx={{ paddingRight: "8px" }} />
 						<Typography variant="p" color="text.secondary">
-							{"100"}
+							{list.views}
 						</Typography>
 					</div>
 				</div>
@@ -121,7 +123,7 @@ export default function ListCard(props) {
 				</ExpandMore>
 			</CardActions>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
-				<Top5List />
+				<Top5List items={list.items} comments={list.comments} />
 			</Collapse>
 		</Card>
 	);

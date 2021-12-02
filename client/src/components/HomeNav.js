@@ -11,7 +11,7 @@ export default function HomeNav() {
 	const { store } = useContext(GlobalStoreContext);
 	console.log("Home Screen was rendered");
 	useEffect(() => {
-		store.loadList();
+		store.loadListUsers();
 	}, []);
 
 	function handleCreateNewList() {
@@ -29,7 +29,7 @@ export default function HomeNav() {
 				}}
 			>
 				{store.idNamePairs.map((list) => (
-					<ListCard key={list._id} list={list} />
+					<ListCard key={list._id} list={list} enableToolbar={true} />
 				))}
 			</List>
 		);

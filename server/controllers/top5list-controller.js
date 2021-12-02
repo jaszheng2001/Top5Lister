@@ -1,5 +1,6 @@
 const Top5List = require("../models/top5list-model");
 const User = require("../models/user-model");
+const mongo = require("mongodb");
 
 createTop5List = (req, res) => {
 	const body = req.body;
@@ -16,7 +17,7 @@ createTop5List = (req, res) => {
 		likes: 0,
 		dislikes: 0,
 		views: 0,
-		comments: [],
+		// comments: [],  # Uncomment after testing
 	});
 
 	console.log("creating top5List: " + JSON.stringify(top5List));
@@ -153,7 +154,17 @@ getTop5ListById = async (req, res) => {
 	}).catch((err) => console.log(err));
 };
 getTop5Lists = async (req, res) => {
-	await Top5List.find({}, (err, top5Lists) => {
+	const sort = req.query.sort;
+	let sortParam = {};
+	sortParam[sort] = -1;
+	if (sort === "publishAsc" || sort === "publishDec") {
+		sortParam["publishDate"] = sort === "publishAsc" ? 1 : -1;
+	}
+	const filter = req.query.filter;
+	const query = req.query.q;
+	console.log(filter);
+	console.log(query);
+	await Top5List.aggregate([{ $sort: sortParam }], (err, top5Lists) => {
 		if (err) {
 			return res.status(400).json({ success: false, error: err });
 		}
@@ -162,9 +173,42 @@ getTop5Lists = async (req, res) => {
 				.status(404)
 				.json({ success: false, error: `Top 5 Lists not found` });
 		}
+		top5Lists = top5Lists.filter((top5list) => {
+			return top5list[filter] === query;
+		});
 		return res.status(200).json({ success: true, data: top5Lists });
 	}).catch((err) => console.log(err));
 };
+
+getTop5ListsUser = async (req, res) => {
+	const sort = req.query.sort;
+	let sortParam = {};
+	sortParam[sort] = -1;
+	if (sort === "publishAsc" || sort === "publishDec") {
+		sortParam["publishDate"] = sort === "publishAsc" ? 1 : -1;
+	}
+	const filter = req.query.filter;
+	const query = req.query.q;
+	console.log(filter);
+	console.log(query);
+	await Top5List.aggregate([{ $sort: sortParam }], (err, top5Lists) => {
+		if (err) {
+			return res.status(400).json({ success: false, error: err });
+		}
+		if (!top5Lists.length) {
+			return res
+				.status(404)
+				.json({ success: false, error: `Top 5 Lists not found` });
+		}
+		top5Lists = top5Lists.filter((top5list) => {
+			return (
+				top5list[filter] === query && top5list.username === req.username
+			);
+		});
+		return res.status(200).json({ success: true, data: top5Lists });
+	}).catch((err) => console.log(err));
+};
+
 getTop5ListPairs = async (req, res) => {
 	let email;
 	try {
@@ -199,6 +243,50 @@ getTop5ListPairs = async (req, res) => {
 	}).catch((err) => console.log(err));
 };
 
+createComment = async (req, res) => {
+	const body = req.body;
+	if (!body) {
+		return res.status(400).json({
+			success: false,
+			error: "You must provide a body to update",
+		});
+	}
+
+	Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
+		console.log("top5List found: " + JSON.stringify(top5List));
+		if (err) {
+			return res.status(404).json({
+				err,
+				message: "Top 5 List not found!",
+			});
+		}
+		const newComment = {
+			_id: new mongo.ObjectId().toString(),
+			username: req.username,
+			comment: req.body.comment,
+		};
+
+		const newComments = [...top5List.comments, newComment];
+		top5List.comments = newComments;
+		top5List
+			.save()
+			.then(() => {
+				console.log("SUCCESS!!!");
+				return res.status(200).json({
+					success: true,
+					id: top5List._id,
+					message: "Comment Added",
+				});
+			})
+			.catch((error) => {
+				console.log("FAILURE: " + JSON.stringify(error));
+				return res.status(404).json({
+					error,
+					message: "Unable to add comment",
+				});
+			});
+	});
+};
 module.exports = {
 	createTop5List,
 	updateTop5List,
@@ -206,4 +294,6 @@ module.exports = {
 	getTop5Lists,
 	getTop5ListPairs,
 	getTop5ListById,
+	getTop5ListsUser,
+	createComment,
 };

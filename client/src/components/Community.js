@@ -9,7 +9,7 @@ export default function AllList() {
 	const { store } = useContext(GlobalStoreContext);
 	console.log("Home Screen was rendered");
 	useEffect(() => {
-		store.loadIdNamePairs();
+		store.loadList();
 	}, []);
 
 	let listCard = "";
@@ -23,11 +23,11 @@ export default function AllList() {
 					height: "90%",
 				}}
 			>
-				{store.idNamePairs.map((pair) => (
+				{store.idNamePairs.map((list) => (
 					<ListCard
-						key={pair._id}
-						idNamePair={pair}
-						selected={false}
+						key={list._id}
+						list={list}
+						enableToolbar={false}
 					/>
 				))}
 			</List>

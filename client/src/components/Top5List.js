@@ -10,8 +10,9 @@ import Typography from "@mui/material/Typography";
 import CommentCard from "./CommentCard";
 import CommentField from "./CommentField";
 
-export default function Top5List() {
+export default function Top5List(props) {
 	const listItemStyle = { paddingTop: "0", paddingBottom: "0" };
+	const { items, comments } = props;
 	return (
 		<div id="list-wrapper">
 			<div id="top5list" className="top5list-inner">
@@ -26,8 +27,8 @@ export default function Top5List() {
 								fontSize: ".7rem",
 								color: "#d4af36",
 							}}
-							primary={"Shine on You Crazy Diamond"}
-							secondary={"10 Votes"}
+							primary={items[0].value || items[0]}
+							secondary={items[0].votes || ""}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -40,8 +41,8 @@ export default function Top5List() {
 								fontSize: ".7rem",
 								color: "#d4af36",
 							}}
-							primary={"Shine on You Crazy Diamond"}
-							secondary={"100 votes"}
+							primary={items[1].value || items[1]}
+							secondary={items[1].votes || ""}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -54,8 +55,8 @@ export default function Top5List() {
 								color: "#d4af36",
 								fontSize: ".7rem",
 							}}
-							primary={"Shine on You Crazy Diamond"}
-							secondary={"100 votes"}
+							primary={items[2].value || items[2]}
+							secondary={items[2].votes || ""}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -68,8 +69,8 @@ export default function Top5List() {
 								color: "#d4af36",
 								fontSize: ".7rem",
 							}}
-							primary={"Shine on You Crazy Diamond"}
-							secondary={"5 Votes"}
+							primary={items[3].value || items[3]}
+							secondary={items[3].votes || ""}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -82,17 +83,17 @@ export default function Top5List() {
 								color: "#d4af36",
 								fontSize: ".7rem",
 							}}
-							primary={"Shine on You Crazy Diamond"}
-							secondary={"100 votes"}
+							primary={items[4].value || items[4]}
+							secondary={items[4].votes || ""}
 						/>
 					</ListItem>
 				</List>
 			</div>
 			<div id="comment-container" className="top5list-inner">
 				<div id="comment-wrapper">
-					<CommentCard />
-					<CommentCard />
-					<CommentCard />
+					{comments.map((el) => (
+						<CommentCard comment={el} id={el._id} />
+					))}
 				</div>
 				<CommentField />
 			</div>

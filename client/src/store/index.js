@@ -22,11 +22,11 @@ export const GlobalStoreActionType = {
 	CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
 	CREATE_NEW_LIST: "CREATE_NEW_LIST",
 	LOAD_LIST: "LOAD_LIST",
+	LOAD_USER_LIST: "LOAD_USER_LIST",
 	MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
 	UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
 	SET_CURRENT_LIST: "SET_CURRENT_LIST",
 	SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
-	SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
 	SHOW_ERR: "SHOW_ERR",
 	HIDE_ERR: "HIDE_ERR",
 };
@@ -41,11 +41,13 @@ function GlobalStoreContextProvider(props) {
 	const [store, setStore] = useState({
 		idNamePairs: [],
 		currentList: null,
-		newListCounter: 0,
 		listNameActive: false,
 		itemActive: false,
 		listMarkedForDeletion: null,
 		err: null,
+		tab: null,
+		query: null,
+		filter: null,
 	});
 	const history = useHistory();
 
@@ -62,8 +64,6 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: payload.idNamePairs,
 					currentList: payload.top5List,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
@@ -74,8 +74,6 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: null,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
@@ -86,8 +84,6 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: payload,
-					newListCounter: store.newListCounter + 1,
-					isListNameEditActive: false,
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
@@ -99,8 +95,15 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: payload,
 					currentList: null,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
+					isItemEditActive: false,
+					listMarkedForDeletion: null,
+					err: store.err,
+				});
+			}
+			case GlobalStoreActionType.LOAD_USER_LIST: {
+				return setStore({
+					idNamePairs: payload,
+					currentList: null,
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
@@ -125,8 +128,6 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: null,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
@@ -137,8 +138,6 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: payload,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
@@ -149,21 +148,7 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: store.currentList,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
 					isItemEditActive: true,
-					listMarkedForDeletion: null,
-					err: store.err,
-				});
-			}
-			// START EDITING A LIST NAME
-			case GlobalStoreActionType.SET_LIST_NAME_EDIT_ACTIVE: {
-				return setStore({
-					idNamePairs: store.idNamePairs,
-					currentList: payload,
-					newListCounter: store.newListCounter,
-					isListNameEditActive: true,
-					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
 				});
@@ -265,6 +250,17 @@ function GlobalStoreContextProvider(props) {
 			});
 		} else {
 			console.log("API FAILED TO GET THE LIST PAIRS");
+		}
+	};
+
+	store.loadListUsers = async function () {
+		const response = await api.getAllTop5ListsUser();
+		if (response.data.success) {
+			let array = response.data.data;
+			storeReducer({
+				type: GlobalStoreActionType.LOAD_USER_LIST,
+				payload: array,
+			});
 		}
 	};
 
