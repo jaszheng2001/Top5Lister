@@ -266,8 +266,7 @@ createComment = async (req, res) => {
 			comment: req.body.comment,
 		};
 
-		const newComments = [...top5List.comments, newComment];
-		top5List.comments = newComments;
+		top5List.comments.unshift(newComment);
 		top5List
 			.save()
 			.then(() => {
@@ -287,6 +286,36 @@ createComment = async (req, res) => {
 			});
 	});
 };
+
+updateView = async (req, res) => {
+	Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
+		if (err) {
+			console.log("List not found");
+			return res.status(404).json({
+				err,
+				message: "Top 5 List not found!",
+			});
+		}
+		top5List.views = top5List.views + 1;
+		top5List
+			.save()
+			.then(() => {
+				console.log("SUCCESS!!!");
+				return res.status(200).json({
+					success: true,
+					id: top5List._id,
+					message: "Incremented view",
+				});
+			})
+			.catch((error) => {
+				console.log("FAILURE: " + JSON.stringify(error));
+				return res.status(404).json({
+					error,
+					message: "Server Error",
+				});
+			});
+	});
+};
 module.exports = {
 	createTop5List,
 	updateTop5List,
@@ -296,4 +325,5 @@ module.exports = {
 	getTop5ListById,
 	getTop5ListsUser,
 	createComment,
+	updateView,
 };

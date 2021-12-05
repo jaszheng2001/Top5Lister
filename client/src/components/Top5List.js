@@ -9,7 +9,7 @@ import CommentField from "./CommentField";
 
 export default function Top5List(props) {
 	const listItemStyle = { paddingTop: "0", paddingBottom: "0" };
-	const { items, comments } = props;
+	const { items, comments, listId } = props;
 	return (
 		<div id="list-wrapper">
 			<div id="top5list" className="top5list-inner">
@@ -89,10 +89,10 @@ export default function Top5List(props) {
 			<div id="comment-container" className="top5list-inner">
 				<div id="comment-wrapper">
 					{comments.map((el) => (
-						<CommentCard comment={el} id={el._id} />
+						<CommentCard comment={el} id={el._id} listId={listId} />
 					))}
 				</div>
-				<CommentField />
+				<CommentField listId={listId} />
 			</div>
 		</div>
 	);

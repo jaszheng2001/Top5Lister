@@ -40,7 +40,7 @@ function GlobalStoreContextProvider(props) {
 		itemActive: false,
 		listMarkedForDeletion: null,
 		err: null,
-		tab: null,
+		tab: "home",
 		query: null,
 		filter: null,
 	});
@@ -72,6 +72,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			// CREATE A NEW LIST
@@ -82,6 +83,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			// GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -93,6 +95,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: "all",
 				});
 			}
 			case GlobalStoreActionType.LOAD_USER_LIST: {
@@ -102,6 +105,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: "home",
 				});
 			}
 			// PREPARE TO DELETE A LIST
@@ -114,6 +118,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: payload,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			// PREPARE TO DELETE A LIST
@@ -124,6 +129,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			// UPDATE A LIST
@@ -134,6 +140,7 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			// START EDITING A LIST ITEM
@@ -143,6 +150,7 @@ function GlobalStoreContextProvider(props) {
 					currentList: payload,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			case GlobalStoreActionType.UPDATE_LIST: {
@@ -151,6 +159,7 @@ function GlobalStoreContextProvider(props) {
 					currentList: payload,
 					listMarkedForDeletion: null,
 					err: store.err,
+					tab: store.tab,
 				});
 			}
 			case GlobalStoreActionType.SHOW_ERR: {
@@ -350,6 +359,17 @@ function GlobalStoreContextProvider(props) {
 			store.showErr(err.response.status, "Failed to Update List");
 		}
 	};
+
+	store.addComment = async function (listId, comment) {
+		const response = await api.createComment(listId, { comment });
+		try {
+			if (response.data.success) {
+				store.loadListUsers();
+			}
+		} catch (err) {
+			store.showErr(err.response.status, "Failed to Comment");
+		}
+	};
 	// THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
 	store.setIsListNameEditActive = function () {
 		storeReducer({
@@ -366,6 +386,13 @@ function GlobalStoreContextProvider(props) {
 		});
 	};
 
+	store.increaseView = async function (id) {
+		try {
+			await api.incView(id);
+		} catch (error) {}
+		if (store.tab === "home") store.loadListUsers();
+		else store.loadList();
+	};
 	// New Functions
 
 	store.showErr = function (statusCode, msg) {

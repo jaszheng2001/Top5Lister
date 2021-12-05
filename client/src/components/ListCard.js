@@ -42,6 +42,9 @@ export default function ListCard(props) {
 	};
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
+		if (!expanded) {
+			store.increaseView(list._id);
+		}
 	};
 
 	const handleEdit = () => {
@@ -137,7 +140,11 @@ export default function ListCard(props) {
 				</ExpandMore>
 			</CardActions>
 			<Collapse in={expanded} timeout="auto" unmountOnExit>
-				<Top5List items={list.items} comments={list.comments} />
+				<Top5List
+					listId={list._id}
+					items={list.items}
+					comments={list.comments}
+				/>
 			</Collapse>
 		</Card>
 	);

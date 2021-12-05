@@ -17,6 +17,17 @@ router.post(
 	auth.verify,
 	Top5ListController.createComment
 );
+router.post("/top5list/:id/views", Top5ListController.updateView);
+router.post(
+	"/top5list/:id/likes",
+	auth.verify,
+	Top5ListController.createComment
+);
+router.post(
+	"/top5list/:id/dislikes",
+	auth.verify,
+	Top5ListController.createComment
+);
 
 router.post("/register", UserController.registerUser);
 router.post("/login", UserController.loginUser);
