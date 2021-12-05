@@ -27,6 +27,7 @@ export const GlobalStoreActionType = {
 	UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
 	SET_CURRENT_LIST: "SET_CURRENT_LIST",
 	SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
+	UPDATE_LIST: "UPDATE_LIST",
 	SHOW_ERR: "SHOW_ERR",
 	HIDE_ERR: "HIDE_ERR",
 };
@@ -144,6 +145,14 @@ function GlobalStoreContextProvider(props) {
 			}
 			// START EDITING A LIST ITEM
 			case GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE: {
+				return setStore({
+					idNamePairs: store.idNamePairs,
+					currentList: payload,
+					listMarkedForDeletion: null,
+					err: store.err,
+				});
+			}
+			case GlobalStoreActionType.UPDATE_LIST: {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: payload,
@@ -331,48 +340,6 @@ function GlobalStoreContextProvider(props) {
 		}
 	};
 
-	store.addMoveItemTransaction = function (start, end) {
-		let transaction = new MoveItem_Transaction(store, start, end);
-		tps.addTransaction(transaction);
-	};
-
-	store.addUpdateItemTransaction = function (index, newText) {
-		let oldText = store.currentList.items[index];
-		let transaction = new UpdateItem_Transaction(
-			store,
-			index,
-			oldText,
-			newText
-		);
-		tps.addTransaction(transaction);
-	};
-
-	store.moveItem = function (start, end) {
-		start -= 1;
-		end -= 1;
-		if (start < end) {
-			let temp = store.currentList.items[start];
-			for (let i = start; i < end; i++) {
-				store.currentList.items[i] = store.currentList.items[i + 1];
-			}
-			store.currentList.items[end] = temp;
-		} else if (start > end) {
-			let temp = store.currentList.items[start];
-			for (let i = start; i > end; i--) {
-				store.currentList.items[i] = store.currentList.items[i - 1];
-			}
-			store.currentList.items[end] = temp;
-		}
-
-		// NOW MAKE IT OFFICIAL
-		store.updateCurrentList();
-	};
-
-	store.updateItem = function (index, newItem) {
-		store.currentList.items[index] = newItem;
-		store.updateCurrentList();
-	};
-
 	store.updateCurrentList = async function () {
 		const response = await api.updateTop5ListById(
 			store.currentList._id,
@@ -386,22 +353,20 @@ function GlobalStoreContextProvider(props) {
 		}
 	};
 
-	store.undo = function () {
-		tps.undoTransaction();
+	store.updateList = async function (name, list) {
+		const newList = { name, items: list };
+		const response = await api.updateTop5ListById(
+			store.currentList._id,
+			newList
+		);
+		try {
+			if (response.data.success) {
+				store.loadListUsers();
+			}
+		} catch (err) {
+			store.showErr(err.response.status, "Failed to Update List");
+		}
 	};
-
-	store.redo = function () {
-		tps.doTransaction();
-	};
-
-	store.canUndo = function () {
-		return tps.hasTransactionToUndo();
-	};
-
-	store.canRedo = function () {
-		return tps.hasTransactionToRedo();
-	};
-
 	// THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
 	store.setIsListNameEditActive = function () {
 		storeReducer({
@@ -419,15 +384,6 @@ function GlobalStoreContextProvider(props) {
 	};
 
 	// New Functions
-	store.addChangeItemTransaction = function (index, oldText, newText) {
-		let transaction = new UpdateItem_Transaction(
-			store,
-			index,
-			oldText,
-			newText
-		);
-		tps.addTransaction(transaction);
-	};
 
 	store.showErr = function (statusCode, msg) {
 		console.log(msg);

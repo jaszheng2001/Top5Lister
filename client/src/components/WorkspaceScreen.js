@@ -59,6 +59,7 @@ function WorkspaceScreen(props) {
 	const handleSave = () => {
 		console.log(listName);
 		console.log(currentList);
+		store.updateList(listName, currentList);
 	};
 	let editItems = "";
 	if (store.currentList) {
