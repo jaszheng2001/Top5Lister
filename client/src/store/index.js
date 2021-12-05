@@ -117,7 +117,6 @@ function GlobalStoreContextProvider(props) {
 					idNamePairs: store.idNamePairs,
 					currentList: null,
 					newListCounter: store.newListCounter,
-					isListNameEditActive: false,
 					isItemEditActive: false,
 					listMarkedForDeletion: payload,
 					err: store.err,
@@ -147,8 +146,7 @@ function GlobalStoreContextProvider(props) {
 			case GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE: {
 				return setStore({
 					idNamePairs: store.idNamePairs,
-					currentList: store.currentList,
-					isItemEditActive: true,
+					currentList: payload,
 					listMarkedForDeletion: null,
 					err: store.err,
 				});
@@ -413,10 +411,10 @@ function GlobalStoreContextProvider(props) {
 	};
 
 	// THIS FUNCTION ENABLES THE PROCESS OF EDITING AN ITEM
-	store.setIsItemEditActive = function () {
+	store.setItemEditActive = function (list) {
 		storeReducer({
 			type: GlobalStoreActionType.SET_ITEM_EDIT_ACTIVE,
-			payload: null,
+			payload: list,
 		});
 	};
 

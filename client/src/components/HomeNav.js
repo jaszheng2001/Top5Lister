@@ -36,6 +36,11 @@ export default function HomeNav() {
 	}
 	return (
 		<div id="list-selector-container">
+			<div id="list-selector-list">
+				{!store.currentList && listCard}
+				{store.currentList && <WorkSpace />}
+				<DeleteModal />
+			</div>
 			<div id="list-selector-heading">
 				<Fab
 					color="primary"
@@ -47,11 +52,6 @@ export default function HomeNav() {
 				</Fab>
 				<Typography variant="h2">Your Lists</Typography>
 			</div>
-			<div id="list-selector-list">
-				{listCard}
-				<DeleteModal />
-			</div>
-			{/* <WorkSpace /> */}
 		</div>
 	);
 }

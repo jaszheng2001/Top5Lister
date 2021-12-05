@@ -32,6 +32,8 @@ export default function ListCard(props) {
 	const { list, enableToolbar } = props;
 	const [expanded, setExpanded] = React.useState(false);
 
+	const { store } = useContext(GlobalStoreContext);
+
 	const cardContentStyle = {
 		paddingBottom: 0,
 		display: "flex",
@@ -42,12 +44,16 @@ export default function ListCard(props) {
 		setExpanded(!expanded);
 	};
 
+	const handleEdit = () => {
+		store.setItemEditActive(list);
+	};
+
 	return (
 		<Card
 			sx={{
 				width: "100%",
 				margin: "10px 0",
-				padding: "0 10px",
+				padding: "0 15px 15px 15px",
 				boxSizing: "border-box",
 				borderRadius: "10px",
 				bgcolor: "#d4d4f5",
@@ -63,7 +69,11 @@ export default function ListCard(props) {
 				</Typography>
 				{!enableToolbar || (
 					<div>
-						<IconButton aria-label="edit" size="large">
+						<IconButton
+							aria-label="edit"
+							size="large"
+							onClick={handleEdit}
+						>
 							<EditIcon fontSize="inherit" />
 						</IconButton>
 						<IconButton

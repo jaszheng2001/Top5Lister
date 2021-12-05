@@ -104,7 +104,7 @@ function AuthContextProvider(props) {
 					},
 				});
 				history.push("/");
-				store.loadIdNamePairs();
+				store.loadListUsers();
 			}
 		} catch (err) {
 			store.showErr(err.response.status, err.response.data.errorMessage);
