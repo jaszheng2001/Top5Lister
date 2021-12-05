@@ -48,6 +48,9 @@ export default function ListCard(props) {
 		store.setItemEditActive(list);
 	};
 
+	const handleDelete = () => {
+		store.markListForDeletion(list);
+	};
 	return (
 		<Card
 			sx={{
@@ -80,6 +83,7 @@ export default function ListCard(props) {
 							aria-label="delete"
 							size="large"
 							sx={{ margin: 0 }}
+							onClick={handleDelete}
 						>
 							<DeleteIcon fontSize="inherit" />
 						</IconButton>

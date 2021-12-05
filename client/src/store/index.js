@@ -1,9 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import jsTPS from "../common/jsTPS";
 import api from "../api";
-import MoveItem_Transaction from "../transactions/MoveItem_Transaction";
-import UpdateItem_Transaction from "../transactions/UpdateItem_Transaction";
 import AuthContext from "../auth";
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -31,9 +28,6 @@ export const GlobalStoreActionType = {
 	SHOW_ERR: "SHOW_ERR",
 	HIDE_ERR: "HIDE_ERR",
 };
-
-// WE'LL NEED THIS TO PROCESS TRANSACTIONS
-const tps = new jsTPS();
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
 // AVAILABLE TO THE REST OF THE APPLICATION
@@ -117,7 +111,6 @@ function GlobalStoreContextProvider(props) {
 				return setStore({
 					idNamePairs: store.idNamePairs,
 					currentList: null,
-					newListCounter: store.newListCounter,
 					isItemEditActive: false,
 					listMarkedForDeletion: payload,
 					err: store.err,
@@ -217,14 +210,12 @@ function GlobalStoreContextProvider(props) {
 			type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
 			payload: {},
 		});
-
-		tps.clearAllTransactions();
 		history.push("/");
 	};
 
 	// THIS FUNCTION CREATES A NEW LIST
 	store.createNewList = async function () {
-		let newListName = "Untitled" + store.newListCounter;
+		let newListName = "Untitled";
 		let payload = {
 			name: newListName,
 			items: ["?", "?", "?", "?", "?"],
@@ -232,15 +223,11 @@ function GlobalStoreContextProvider(props) {
 		};
 		const response = await api.createTop5List(payload);
 		if (response.data.success) {
-			tps.clearAllTransactions();
 			let newList = response.data.top5List;
 			storeReducer({
 				type: GlobalStoreActionType.CREATE_NEW_LIST,
 				payload: newList,
 			});
-
-			// IF IT'S A VALID LIST THEN LET'S START EDITING IT
-			history.push("/top5list/" + newList._id);
 		} else {
 			console.log("API FAILED TO CREATE A NEW LIST");
 		}
@@ -275,24 +262,20 @@ function GlobalStoreContextProvider(props) {
 	// OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
 	// FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
 	// showDeleteListModal, and hideDeleteListModal
-	store.markListForDeletion = async function (id) {
+	store.markListForDeletion = function (list) {
 		// GET THE LIST
 		console.log("Mark List for Delete");
-		let response = await api.getTop5ListById(id);
-		if (response.data.success) {
-			let top5List = response.data.top5List;
-			storeReducer({
-				type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-				payload: top5List,
-			});
-		}
+		storeReducer({
+			type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+			payload: list,
+		});
 	};
 
 	store.deleteList = async function (listToDelete) {
 		let response = await api.deleteTop5ListById(listToDelete._id);
 		if (response.data.success) {
-			store.loadIdNamePairs();
-			history.push("/");
+			store.loadListUsers();
+			// history.push("/");
 		}
 	};
 
@@ -399,8 +382,6 @@ function GlobalStoreContextProvider(props) {
 			payload: null,
 		});
 	};
-	store.tps = tps;
-
 	return (
 		<GlobalStoreContext.Provider
 			value={{

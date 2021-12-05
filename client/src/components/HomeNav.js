@@ -39,7 +39,6 @@ export default function HomeNav() {
 			<div id="list-selector-list">
 				{!store.currentList && listCard}
 				{store.currentList && <WorkSpace />}
-				<DeleteModal />
 			</div>
 			<div id="list-selector-heading">
 				<Fab
@@ -52,6 +51,7 @@ export default function HomeNav() {
 				</Fab>
 				<Typography variant="h2">Your Lists</Typography>
 			</div>
+			<DeleteModal />
 		</div>
 	);
 }
