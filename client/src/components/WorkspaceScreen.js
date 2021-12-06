@@ -56,11 +56,17 @@ function WorkspaceScreen(props) {
 			setDisableSave(false);
 		}
 	};
+
 	const handleSave = () => {
 		console.log(list.name);
 		console.log(list.items);
 		store.updateList(list.name, list.items);
 	};
+
+	const handlePublish = () => {
+		store.publishList(list.name, list.items);
+	};
+
 	let editItems = "";
 	if (store.currentList) {
 		editItems = (
@@ -154,6 +160,7 @@ function WorkspaceScreen(props) {
 							bgcolor: "#e6e6e6",
 							fontWeight: 600,
 						}}
+						onClick={handlePublish}
 					>
 						Publish
 					</Button>

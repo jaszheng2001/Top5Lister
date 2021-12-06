@@ -2,6 +2,7 @@ const auth = require("../auth");
 const express = require("express");
 const Top5ListController = require("../controllers/top5list-controller");
 const UserController = require("../controllers/user-controller");
+const CommunityListController = require("../controllers/communitylist-controller");
 const router = express.Router();
 
 router.post("/top5list", auth.verify, Top5ListController.createTop5List);
@@ -22,6 +23,14 @@ router.post(
 	"/top5list/:id/rating",
 	auth.verify,
 	Top5ListController.updateRating
+);
+// Community List
+router.get("/community", CommunityListController.getCommunityLists);
+
+router.post(
+	"/top5list/:id/community",
+	auth.verify,
+	Top5ListController.publishList
 );
 
 router.post("/register", UserController.registerUser);

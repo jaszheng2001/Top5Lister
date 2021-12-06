@@ -29,6 +29,7 @@ const Top5ListSchema = new Schema(
 			type: [Object],
 			required: true,
 		},
+		published: { type: Boolean, required: true },
 		publishDate: {
 			type: Date,
 		},

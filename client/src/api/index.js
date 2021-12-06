@@ -39,6 +39,11 @@ export const createComment = (id, payload) =>
 export const incView = (id) => api.post(`/top5list/${id}/views`);
 export const updateRating = (id, payload) =>
 	api.post(`/top5list/${id}/rating`, payload);
+// Community List
+export const publishList = (id, payload) =>
+	api.post(`/top5list/${id}/community`, payload);
+export const getCommunityList = (params) =>
+	api.get("/community", { params: params });
 
 // Auth
 export const getLoggedIn = () => api.get(`/loggedIn/`);
@@ -61,6 +66,8 @@ const apis = {
 	createComment,
 	incView,
 	updateRating,
+	publishList,
+	getCommunityList,
 };
 
 export default apis;

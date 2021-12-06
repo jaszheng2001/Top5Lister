@@ -7,6 +7,7 @@ import UserList from "./UserList";
 import { MemoryRouter, Route, Switch } from "react-router-dom";
 import AllList from "./AllList";
 import Community from "./Community";
+import ErrorModal from "./ErrorModal";
 /*
     
     @author McKilla Gorilla
@@ -21,6 +22,7 @@ const HomeScreen = () => {
 				<Route exact path="/user" component={UserList} />
 				<Route exact path="/community" component={Community} />
 			</Switch>
+			<ErrorModal />
 		</MemoryRouter>
 	);
 };

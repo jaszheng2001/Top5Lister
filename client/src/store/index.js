@@ -21,6 +21,7 @@ export const GlobalStoreActionType = {
 	CREATE_NEW_LIST: "CREATE_NEW_LIST",
 	LOAD_LIST: "LOAD_LIST",
 	LOAD_USER_LIST: "LOAD_USER_LIST",
+	LOAD_COMMUNITY: "LOAD_COMMUNITY",
 	MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
 	UNMARK_LIST_FOR_DELETION: "UNMARK_LIST_FOR_DELETION",
 	SET_CURRENT_LIST: "SET_CURRENT_LIST",
@@ -123,6 +124,19 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: "home",
+					queryType: "name",
+					query: store.query,
+					sort: store.sort,
+				});
+			}
+			case GlobalStoreActionType.LOAD_COMMUNITY: {
+				return setStore({
+					idNamePairs: payload,
+					currentList: null,
+					isItemEditActive: false,
+					listMarkedForDeletion: null,
+					err: store.err,
+					tab: "community",
 					queryType: "name",
 					query: store.query,
 					sort: store.sort,
@@ -345,6 +359,27 @@ function GlobalStoreContextProvider(props) {
 		}
 	};
 
+	store.loadCommunityList = async function () {
+		let params = {};
+		const query = store.query;
+		if (query) {
+			params = { filter: store.queryType, q: query };
+		}
+		if (store.sort) {
+			params["sort"] = store.sort;
+		}
+		try {
+			const response = await api.getCommunityList(params);
+			if (response.data.success) {
+				let array = response.data.data;
+				storeReducer({
+					type: GlobalStoreActionType.LOAD_COMMUNITY,
+					payload: array,
+				});
+			}
+		} catch (err) {}
+	};
+
 	// THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
 	// OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
 	// FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
@@ -467,6 +502,21 @@ function GlobalStoreContextProvider(props) {
 			}
 		} catch (err) {
 			store.showErr(err.response.status, "Failed to Update List");
+		}
+	};
+
+	store.publishList = async function (name, list) {
+		const newList = { name, items: list };
+		try {
+			const response = await api.publishList(
+				store.currentList._id,
+				newList
+			);
+			if (response.data.success) {
+				store.loadListUsers();
+			}
+		} catch (err) {
+			store.showErr(err.response.status, "Failed to publish List!");
 		}
 	};
 
