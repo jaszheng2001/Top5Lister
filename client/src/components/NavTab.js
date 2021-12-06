@@ -9,7 +9,8 @@ import FunctionsIcon from "@mui/icons-material/Functions";
 import { Link, useRouteMatch } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import SortByMenu from "./SortByMenu";
-
+import { GlobalStoreContext } from "../store";
+import { useContext } from "react";
 function MyTabs() {
 	// You need to provide the routes in descendant order.
 	// This means that if you have nested routes like:
@@ -56,6 +57,7 @@ function MyTabs() {
 }
 
 export default function TabNav() {
+	const { store } = useContext(GlobalStoreContext);
 	return (
 		<Box
 			sx={{
@@ -63,8 +65,20 @@ export default function TabNav() {
 				display: "flex",
 				flexDirection: "row",
 				alignItems: "center",
+				position: "relative",
 			}}
 		>
+			{!store.currentList || (
+				<Box
+					sx={{
+						width: "100%",
+						height: "100%",
+						zIndex: 100,
+						bgcolor: "rgba(216,216,216,.5)",
+						position: "absolute",
+					}}
+				></Box>
+			)}
 			<MyTabs />
 			<SearchBar />
 			<SortByMenu />

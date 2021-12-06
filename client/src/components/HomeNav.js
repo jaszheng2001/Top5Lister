@@ -46,6 +46,7 @@ export default function HomeNav() {
 					aria-label="add"
 					id="add-list-button"
 					onClick={handleCreateNewList}
+					disabled={store.currentList ? true : false}
 				>
 					<AddIcon />
 				</Fab>

@@ -89,7 +89,12 @@ export default function Top5List(props) {
 			<div id="comment-container" className="top5list-inner">
 				<div id="comment-wrapper">
 					{comments.map((el) => (
-						<CommentCard comment={el} id={el._id} listId={listId} />
+						<CommentCard
+							key={el._id}
+							comment={el}
+							id={el._id}
+							listId={listId}
+						/>
 					))}
 				</div>
 				<CommentField listId={listId} />
