@@ -34,7 +34,9 @@ export default function AllList() {
 	}
 	return (
 		<div id="list-selector-container">
-			<div id="list-selector-heading">User Status Bar</div>
+			<div id="list-selector-heading">
+				{store.query ? store.query + " List" : ""}
+			</div>
 			<div id="list-selector-list">{listCard}</div>
 		</div>
 	);
