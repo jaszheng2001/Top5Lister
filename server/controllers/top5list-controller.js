@@ -108,7 +108,7 @@ deleteTop5List = async (req, res) => {
 		return res.status(403).json({ success: false, error: "Unauthorized" });
 	}
 
-	Top5List.findById({ _id: req.params.id }, (err, top5List) => {
+	Top5List.findById({ _id: req.params.id }, async (err, top5List) => {
 		if (err) {
 			return res.status(404).json({
 				err,
@@ -120,6 +120,30 @@ deleteTop5List = async (req, res) => {
 			return res
 				.status(401)
 				.json({ success: false, error: "Unauthorized" });
+		}
+
+		const { name, items } = top5List;
+		if (top5List.published) {
+			const communityList = await CommunityList.findOne({
+				name: new RegExp(`^${name}$`, "i"),
+			});
+			const commItems = [...communityList.items];
+			const scoring = { 0: 5, 1: 4, 2: 3, 3: 2, 4: 1 };
+			for (let i = 0; i < 5; i++) {
+				const item = items[i];
+				for (let j = 0; j < commItems.length; j++) {
+					const cItem = commItems[j];
+					if (cItem.value.toLowerCase() === item.toLowerCase()) {
+						const newObj = { ...cItem };
+						newObj.votes = commItems[j].votes - scoring[i];
+						commItems[j] = newObj;
+						break;
+					}
+				}
+			}
+			commItems.sort((a, b) => b.votes - a.votes);
+			communityList.items = commItems;
+			await communityList.save();
 		}
 
 		Top5List.findOneAndDelete({ _id: req.params.id }, () => {
