@@ -174,6 +174,12 @@ getTop5Lists = async (req, res) => {
 				.json({ success: false, error: `Top 5 Lists not found` });
 		}
 		top5Lists = top5Lists.filter((top5list) => {
+			if (filter && query) {
+				let value = top5list[filter];
+				if (!value) return true;
+				value = value.toLowerCase();
+				return value === query.toLowerCase();
+			}
 			return top5list[filter] === query;
 		});
 		return res.status(200).json({ success: true, data: top5Lists });
@@ -201,6 +207,17 @@ getTop5ListsUser = async (req, res) => {
 				.json({ success: false, error: `Top 5 Lists not found` });
 		}
 		top5Lists = top5Lists.filter((top5list) => {
+			if (!filter || !query) return top5list.username === req.username;
+
+			if (filter && query) {
+				let value = top5list[filter];
+				if (!value) return true;
+				value = value.toLowerCase();
+				return (
+					value.includes(query.toLowerCase()) &&
+					top5list.username === req.username
+				);
+			}
 			return (
 				top5list[filter] === query && top5list.username === req.username
 			);

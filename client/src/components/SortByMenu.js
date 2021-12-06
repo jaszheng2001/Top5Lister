@@ -7,6 +7,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
+import { useContext } from "react";
+import { GlobalStoreContext } from "../store/index.js";
 const StyledMenu = styled((props) => (
 	<Menu
 		elevation={0}
@@ -53,11 +55,37 @@ const StyledMenu = styled((props) => (
 export default function CustomizedMenus() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
+
+	const { store } = useContext(GlobalStoreContext);
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
 	const handleClose = () => {
 		setAnchorEl(null);
+	};
+
+	const pubDes = () => {
+		store.sortList("publishDec");
+		handleClose();
+	};
+	const pubAsc = () => {
+		store.sortList("publishAsc");
+		handleClose();
+	};
+
+	const views = () => {
+		store.sortList("views");
+		handleClose();
+	};
+
+	const likes = () => {
+		store.sortList("likes");
+		handleClose();
+	};
+
+	const dislikes = () => {
+		store.sortList("dislikes");
+		handleClose();
 	};
 
 	return (
@@ -84,19 +112,19 @@ export default function CustomizedMenus() {
 				open={open}
 				onClose={handleClose}
 			>
-				<MenuItem onClick={handleClose} disableRipple>
+				<MenuItem onClick={pubDes} disableRipple>
 					Publish By (Newest)
 				</MenuItem>
-				<MenuItem onClick={handleClose} disableRipple>
+				<MenuItem onClick={pubAsc} disableRipple>
 					Publish By (Oldest)
 				</MenuItem>
-				<MenuItem onClick={handleClose} disableRipple>
+				<MenuItem onClick={views} disableRipple>
 					Views
 				</MenuItem>
-				<MenuItem onClick={handleClose} disableRipple>
+				<MenuItem onClick={likes} disableRipple>
 					Likes
 				</MenuItem>
-				<MenuItem onClick={handleClose} disableRipple>
+				<MenuItem onClick={dislikes} disableRipple>
 					Dislikes
 				</MenuItem>
 			</StyledMenu>

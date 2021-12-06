@@ -17,13 +17,14 @@ import ErrorModal from "./ErrorModal";
 function WorkspaceScreen(props) {
 	const { store } = useContext(GlobalStoreContext);
 	const [disableSave, setDisableSave] = useState(false);
+	const [disablePublish, setDisablePublish] = useState(true);
 	const currentList =
 		store.currentList !== null ? store.currentList.items : [];
 
 	let listName =
 		store.currentList !== null ? store.currentList.name : "Untitled";
 	const editList = (index, value) => {
-		currentList[index] = value;
+		currentList[index] = value.trim();
 		console.log(listName);
 		console.log(currentList);
 
@@ -41,7 +42,7 @@ function WorkspaceScreen(props) {
 	};
 
 	const handleListNameChange = (event) => {
-		listName = event.target.value;
+		listName = event.target.value.trim();
 		console.log(event.target.value);
 		console.log(currentList);
 		if (

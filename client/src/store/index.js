@@ -15,6 +15,7 @@ export const GlobalStoreContext = createContext({});
 // THESE ARE ALL THE TYPES OF UPDATES TO OUR GLOBAL
 // DATA STORE STATE THAT CAN BE PROCESSED
 export const GlobalStoreActionType = {
+	UPDATE_TAB: "UPDATE_TAB",
 	CHANGE_LIST_NAME: "CHANGE_LIST_NAME",
 	CLOSE_CURRENT_LIST: "CLOSE_CURRENT_LIST",
 	CREATE_NEW_LIST: "CREATE_NEW_LIST",
@@ -25,6 +26,8 @@ export const GlobalStoreActionType = {
 	SET_CURRENT_LIST: "SET_CURRENT_LIST",
 	SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
 	UPDATE_LIST: "UPDATE_LIST",
+	UPDATE_SEARCH: "UPDATE_SEARCH",
+	SORT: "SORT",
 	SHOW_ERR: "SHOW_ERR",
 	HIDE_ERR: "HIDE_ERR",
 };
@@ -41,8 +44,9 @@ function GlobalStoreContextProvider(props) {
 		listMarkedForDeletion: null,
 		err: null,
 		tab: "home",
+		queryType: "name",
 		query: null,
-		filter: null,
+		sort: null,
 	});
 	const history = useHistory();
 
@@ -62,6 +66,9 @@ function GlobalStoreContextProvider(props) {
 					isItemEditActive: false,
 					listMarkedForDeletion: null,
 					err: store.err,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// STOP EDITING THE CURRENT LIST
@@ -73,6 +80,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: store.tab,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// CREATE A NEW LIST
@@ -84,6 +94,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: store.tab,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -96,6 +109,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: "all",
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			case GlobalStoreActionType.LOAD_USER_LIST: {
@@ -106,6 +122,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: "home",
+					queryType: "name",
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// PREPARE TO DELETE A LIST
@@ -119,6 +138,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: payload,
 					err: store.err,
 					tab: store.tab,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// PREPARE TO DELETE A LIST
@@ -130,6 +152,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: store.tab,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// UPDATE A LIST
@@ -141,6 +166,9 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: store.tab,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
 			// START EDITING A LIST ITEM
@@ -151,15 +179,44 @@ function GlobalStoreContextProvider(props) {
 					listMarkedForDeletion: null,
 					err: store.err,
 					tab: store.tab,
+					queryType: store.queryType,
+					query: store.query,
+					sort: store.sort,
 				});
 			}
-			case GlobalStoreActionType.UPDATE_LIST: {
+			// case GlobalStoreActionType.UPDATE_LIST: {
+			// 	return setStore({
+			// 		idNamePairs: store.idNamePairs,
+			// 		currentList: payload,
+			// 		listMarkedForDeletion: null,
+			// 		err: store.err,
+			// 		tab: store.tab,
+			// 	});
+			// }
+			case GlobalStoreActionType.UPDATE_TAB: {
 				return setStore({
-					idNamePairs: store.idNamePairs,
-					currentList: payload,
+					idNamePairs: [],
+					currentList: null,
 					listMarkedForDeletion: null,
 					err: store.err,
-					tab: store.tab,
+					tab: payload.newTab,
+					queryType: payload.queryType,
+					query: null,
+					sort: store.sort,
+				});
+			}
+			case GlobalStoreActionType.UPDATE_SEARCH: {
+				return setStore({
+					...store,
+					idNamePairs: payload.list,
+					query: payload.query,
+				});
+			}
+			case GlobalStoreActionType.SORT: {
+				return setStore({
+					...store,
+					idNamePairs: payload.list,
+					sort: payload.sort,
 				});
 			}
 			case GlobalStoreActionType.SHOW_ERR: {
@@ -244,7 +301,16 @@ function GlobalStoreContextProvider(props) {
 
 	// THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
 	store.loadList = async function () {
-		const response = await api.getAllTop5Lists();
+		console.log(store);
+		let params = {};
+		const query = store.query;
+		if (query) {
+			params = { filter: store.queryType, q: query };
+		}
+		if (store.sort) {
+			params["sort"] = store.sort;
+		}
+		const response = await api.getAllTop5Lists(params);
 		if (response.data.success) {
 			let pairsArray = response.data.data;
 			storeReducer({
@@ -257,7 +323,15 @@ function GlobalStoreContextProvider(props) {
 	};
 
 	store.loadListUsers = async function () {
-		const response = await api.getAllTop5ListsUser();
+		let params = {};
+		const query = store.query;
+		if (query) {
+			params = { filter: store.queryType, q: query };
+		}
+		if (store.sort) {
+			params["sort"] = store.sort;
+		}
+		const response = await api.getAllTop5ListsUser(params);
 		if (response.data.success) {
 			let array = response.data.data;
 			storeReducer({
@@ -332,6 +406,38 @@ function GlobalStoreContextProvider(props) {
 		}
 	};
 
+	store.updateTab = function (newTab, queryType) {
+		storeReducer({
+			type: GlobalStoreActionType.UPDATE_TAB,
+			payload: { newTab, queryType },
+		});
+	};
+	store.updateSearch = async function (query) {
+		let params = {};
+		if (query) {
+			params = { filter: store.queryType, q: query };
+		}
+		console.log(params);
+		try {
+			if (store.tab === "home") {
+				const response = await api.getAllTop5ListsUser(params);
+				if (response.data.success) {
+					storeReducer({
+						type: GlobalStoreActionType.UPDATE_SEARCH,
+						payload: { query, list: response.data.data },
+					});
+				}
+			} else {
+				const response = await api.getAllTop5Lists(params);
+				if (response.data.success) {
+					storeReducer({
+						type: GlobalStoreActionType.UPDATE_SEARCH,
+						payload: { query, list: response.data.data },
+					});
+				}
+			}
+		} catch (err) {}
+	};
 	store.updateCurrentList = async function () {
 		const response = await api.updateTop5ListById(
 			store.currentList._id,
@@ -364,7 +470,8 @@ function GlobalStoreContextProvider(props) {
 		const response = await api.createComment(listId, { comment });
 		try {
 			if (response.data.success) {
-				store.loadListUsers();
+				if (store.tab === "home") store.loadListUsers();
+				else store.loadList();
 			}
 		} catch (err) {
 			store.showErr(err.response.status, "Failed to Comment");
@@ -395,6 +502,35 @@ function GlobalStoreContextProvider(props) {
 	};
 	// New Functions
 
+	store.sortList = async function (sort) {
+		let params = {};
+		const query = store.query;
+		if (query) {
+			params = { filter: store.queryType, q: query };
+		}
+		if (sort) {
+			params["sort"] = sort;
+		}
+		try {
+			if (store.tab === "home") {
+				const response = await api.getAllTop5ListsUser(params);
+				if (response.data.success) {
+					storeReducer({
+						type: GlobalStoreActionType.SORT,
+						payload: { sort, list: response.data.data },
+					});
+				}
+			} else {
+				const response = await api.getAllTop5Lists(params);
+				if (response.data.success) {
+					storeReducer({
+						type: GlobalStoreActionType.SORT,
+						payload: { sort, list: response.data.data },
+					});
+				}
+			}
+		} catch (err) {}
+	};
 	store.showErr = function (statusCode, msg) {
 		console.log(msg);
 		storeReducer({

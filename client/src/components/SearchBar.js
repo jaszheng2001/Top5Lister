@@ -3,13 +3,20 @@ import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { GlobalStoreContext } from "../store";
 
 export default function SearchBar() {
-	const [text, setText] = useState("");
+	const { store } = useContext(GlobalStoreContext);
+	const [text, setText] = useState(store.query || "");
+
+	useEffect(() => {
+		setText("");
+	}, [store.tab]);
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		console.log(text);
+		store.updateSearch(text);
 	};
 
 	const handleTextChange = (e) => {
@@ -34,6 +41,7 @@ export default function SearchBar() {
 				placeholder="Search"
 				inputProps={{ "aria-label": "search" }}
 				onChange={handleTextChange}
+				value={text}
 			/>
 			<IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
 				<SearchIcon />

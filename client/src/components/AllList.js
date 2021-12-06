@@ -7,7 +7,7 @@ export default function AllList() {
 	const { store } = useContext(GlobalStoreContext);
 	console.log("Home Screen was rendered");
 	useEffect(() => {
-		store.loadList();
+		store.updateTab("all", "name");
 	}, []);
 
 	let listCard = "";
