@@ -26,6 +26,17 @@ router.post(
 );
 // Community List
 router.get("/community", CommunityListController.getCommunityLists);
+router.post("/community/:id/views", CommunityListController.updateView);
+router.post(
+	"/community/:id/rating",
+	auth.verify,
+	CommunityListController.updateRating
+);
+router.post(
+	"/community/:id/comments",
+	auth.verify,
+	CommunityListController.createComment
+);
 
 router.post(
 	"/top5list/:id/community",
