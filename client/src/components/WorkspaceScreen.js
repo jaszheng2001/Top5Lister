@@ -18,49 +18,48 @@ function WorkspaceScreen(props) {
 	const { store } = useContext(GlobalStoreContext);
 	const [disableSave, setDisableSave] = useState(false);
 	const [disablePublish, setDisablePublish] = useState(true);
-	const currentList =
-		store.currentList !== null ? store.currentList.items : [];
+	const [list, setList] = useState(
+		store.currentList !== null ? { ...store.currentList } : {}
+	);
 
-	let listName =
-		store.currentList !== null ? store.currentList.name : "Untitled";
 	const editList = (index, value) => {
-		currentList[index] = value.trim();
-		console.log(listName);
-		console.log(currentList);
+		list.items[index] = value.trim();
+		console.log(list.name);
+		console.log(list.items);
 
 		if (
-			currentList.some((item) => item.trim().length === 0) ||
-			listName.trim().length === 0
+			list.items.some((item) => item.trim().length === 0) ||
+			list.name.trim().length === 0
 		) {
 			setDisableSave(true);
 		} else if (
-			currentList.every((item) => item.trim().length !== 0) &&
-			listName.trim().length !== 0
+			list.items.every((item) => item.trim().length !== 0) &&
+			list.name.trim().length !== 0
 		) {
 			setDisableSave(false);
 		}
 	};
 
 	const handleListNameChange = (event) => {
-		listName = event.target.value.trim();
+		list.name = event.target.value.trim();
 		console.log(event.target.value);
-		console.log(currentList);
+		console.log(list.items);
 		if (
-			currentList.some((item) => item.trim().length === 0) ||
-			listName.trim().length === 0
+			list.items.some((item) => item.trim().length === 0) ||
+			list.name.trim().length === 0
 		) {
 			setDisableSave(true);
 		} else if (
-			currentList.every((item) => item.trim().length !== 0) &&
-			listName.trim().length !== 0
+			list.items.every((item) => item.trim().length !== 0) &&
+			list.name.trim().length !== 0
 		) {
 			setDisableSave(false);
 		}
 	};
 	const handleSave = () => {
-		console.log(listName);
-		console.log(currentList);
-		store.updateList(listName, currentList);
+		console.log(list.name);
+		console.log(list.items);
+		store.updateList(list.name, list.items);
 	};
 	let editItems = "";
 	if (store.currentList) {
@@ -74,7 +73,7 @@ function WorkspaceScreen(props) {
 					paddingBottom: 0,
 				}}
 			>
-				{currentList.map((item, index) => (
+				{list.items.map((item, index) => (
 					<Top5Item
 						key={"top5-item-" + (index + 1)}
 						id={"top5-item-" + (index + 1)}
@@ -102,7 +101,7 @@ function WorkspaceScreen(props) {
 						bgcolor: "white",
 					},
 				}}
-				defaultValue={listName}
+				defaultValue={list.name}
 				onChange={handleListNameChange}
 			/>
 			<div id="workspace-edit">
@@ -160,7 +159,6 @@ function WorkspaceScreen(props) {
 					</Button>
 				</Box>
 			</div>
-			<ErrorModal />
 		</div>
 	);
 }

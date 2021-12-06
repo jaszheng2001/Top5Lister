@@ -19,14 +19,9 @@ router.post(
 );
 router.post("/top5list/:id/views", Top5ListController.updateView);
 router.post(
-	"/top5list/:id/likes",
+	"/top5list/:id/rating",
 	auth.verify,
-	Top5ListController.createComment
-);
-router.post(
-	"/top5list/:id/dislikes",
-	auth.verify,
-	Top5ListController.createComment
+	Top5ListController.updateRating
 );
 
 router.post("/register", UserController.registerUser);

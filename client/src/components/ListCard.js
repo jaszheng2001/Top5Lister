@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { GlobalStoreContext } from "../store";
+import AuthContext from "../auth";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
@@ -9,7 +10,9 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpTwoToneIcon from "@mui/icons-material/ThumbUpTwoTone";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbDownTwoToneIcon from "@mui/icons-material/ThumbDownTwoTone";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -33,6 +36,10 @@ export default function ListCard(props) {
 	const [expanded, setExpanded] = React.useState(false);
 
 	const { store } = useContext(GlobalStoreContext);
+	const { auth } = useContext(AuthContext);
+
+	const like = list.likes.includes(auth.user.username);
+	const dislike = list.dislikes.includes(auth.user.username);
 
 	const cardContentStyle = {
 		paddingBottom: 0,
@@ -53,6 +60,22 @@ export default function ListCard(props) {
 
 	const handleDelete = () => {
 		store.markListForDeletion(list);
+	};
+
+	const handleLikeClicked = () => {
+		if (like) {
+			store.updateRating(list._id, "unlike");
+		} else {
+			store.updateRating(list._id, "like");
+		}
+	};
+
+	const handleDislikeClicked = () => {
+		if (dislike) {
+			store.updateRating(list._id, "undislike");
+		} else {
+			store.updateRating(list._id, "dislike");
+		}
 	};
 	return (
 		<Card
@@ -103,12 +126,18 @@ export default function ListCard(props) {
 						id="like-btn-wrapper"
 						style={{ display: "flex", alignItems: "center" }}
 					>
-						<IconButton color="primary">
-							<ThumbUpIcon />
+						<IconButton color="primary" onClick={handleLikeClicked}>
+							{like ? (
+								<ThumbUpIcon style={{ color: "black" }} />
+							) : (
+								<ThumbUpTwoToneIcon
+									style={{ color: "black" }}
+								/>
+							)}
 						</IconButton>
 						<div>
 							<Typography variant="p" color="text.secondary">
-								{list.likes}
+								{list.likes.length}
 							</Typography>
 						</div>
 					</div>
@@ -116,11 +145,20 @@ export default function ListCard(props) {
 						id="dislike-btn-wrapper"
 						style={{ display: "flex", alignItems: "center" }}
 					>
-						<IconButton color="primary">
-							<ThumbDownIcon />
+						<IconButton
+							color="primary"
+							onClick={handleDislikeClicked}
+						>
+							{dislike ? (
+								<ThumbDownIcon style={{ color: "black" }} />
+							) : (
+								<ThumbDownTwoToneIcon
+									style={{ color: "black" }}
+								/>
+							)}
 						</IconButton>
 						<Typography variant="p" color="text.secondary">
-							{list.dislikes}
+							{list.dislikes.length}
 						</Typography>
 					</div>
 					<div style={{ display: "flex", alignItems: "center" }}>

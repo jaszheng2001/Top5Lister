@@ -14,6 +14,7 @@ getLoggedIn = async (req, res) => {
 					firstName: loggedInUser.firstName,
 					lastName: loggedInUser.lastName,
 					email: loggedInUser.email,
+					username: loggedInUser.username,
 				},
 			});
 		} catch (err) {
@@ -94,6 +95,7 @@ registerUser = async (req, res) => {
 					firstName: savedUser.firstName,
 					lastName: savedUser.lastName,
 					email: savedUser.email,
+					username: savedUser.username,
 				},
 			})
 			.send();
@@ -140,6 +142,7 @@ loginUser = async (req, res) => {
 						firstName: user.firstName,
 						lastName: user.lastName,
 						email: user.email,
+						username: user.username,
 					},
 				})
 				.send();

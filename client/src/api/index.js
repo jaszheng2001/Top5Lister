@@ -37,6 +37,9 @@ export const getTop5ListById = (id) => api.get(`/top5list/${id}`);
 export const createComment = (id, payload) =>
 	api.post(`/top5list/${id}/comments`, payload);
 export const incView = (id) => api.post(`/top5list/${id}/views`);
+export const updateRating = (id, payload) =>
+	api.post(`/top5list/${id}/rating`, payload);
+
 // Auth
 export const getLoggedIn = () => api.get(`/loggedIn/`);
 export const registerUser = (payload) => api.post(`/register/`, payload);
@@ -57,6 +60,7 @@ const apis = {
 	logoutUser,
 	createComment,
 	incView,
+	updateRating,
 };
 
 export default apis;

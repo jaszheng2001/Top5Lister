@@ -17,6 +17,7 @@ function AuthContextProvider(props) {
 	const [auth, setAuth] = useState({
 		user: null,
 		loggedIn: false,
+		// guest: false,
 	});
 	const history = useHistory();
 
@@ -32,24 +33,28 @@ function AuthContextProvider(props) {
 				return setAuth({
 					user: payload.user,
 					loggedIn: payload.loggedIn,
+					// guest: auth.guest,
 				});
 			}
 			case AuthActionType.REGISTER_USER: {
 				return setAuth({
 					user: payload.user,
 					loggedIn: true,
+					// guest: false,
 				});
 			}
 			case AuthActionType.LOGIN_USER: {
 				return setAuth({
 					user: payload.user,
 					loggedIn: true,
+					// guest: false,
 				});
 			}
 			case AuthActionType.LOGOUT_USER: {
 				return setAuth({
 					user: null,
 					loggedIn: false,
+					// guest: false,
 				});
 			}
 			default:

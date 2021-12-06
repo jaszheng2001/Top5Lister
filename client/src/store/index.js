@@ -27,6 +27,7 @@ export const GlobalStoreActionType = {
 	SET_ITEM_EDIT_ACTIVE: "SET_ITEM_EDIT_ACTIVE",
 	UPDATE_LIST: "UPDATE_LIST",
 	UPDATE_SEARCH: "UPDATE_SEARCH",
+	UPDATE_RATING: "UPDATE_RATING",
 	SORT: "SORT",
 	SHOW_ERR: "SHOW_ERR",
 	HIDE_ERR: "HIDE_ERR",
@@ -218,6 +219,9 @@ function GlobalStoreContextProvider(props) {
 					idNamePairs: payload.list,
 					sort: payload.sort,
 				});
+			}
+			case GlobalStoreActionType.UPDATE_RATING: {
+				return setStore({});
 			}
 			case GlobalStoreActionType.SHOW_ERR: {
 				console.log(payload);
@@ -531,6 +535,15 @@ function GlobalStoreContextProvider(props) {
 			}
 		} catch (err) {}
 	};
+
+	store.updateRating = async function (id, action) {
+		try {
+			await api.updateRating(id, { action });
+			if (store.tab === "home") store.loadListUsers();
+			else store.loadList();
+		} catch (err) {}
+	};
+
 	store.showErr = function (statusCode, msg) {
 		console.log(msg);
 		storeReducer({

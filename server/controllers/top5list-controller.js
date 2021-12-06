@@ -14,10 +14,10 @@ createTop5List = (req, res) => {
 	const top5List = new Top5List({
 		...body,
 		username: req.username,
-		likes: 0,
-		dislikes: 0,
+		likes: [],
+		dislikes: [],
 		views: 0,
-		// comments: [],  # Uncomment after testing
+		comments: [],
 	});
 
 	console.log("creating top5List: " + JSON.stringify(top5List));
@@ -168,11 +168,6 @@ getTop5Lists = async (req, res) => {
 		if (err) {
 			return res.status(400).json({ success: false, error: err });
 		}
-		if (!top5Lists.length) {
-			return res
-				.status(404)
-				.json({ success: false, error: `Top 5 Lists not found` });
-		}
 		top5Lists = top5Lists.filter((top5list) => {
 			if (filter && query) {
 				let value = top5list[filter];
@@ -200,11 +195,6 @@ getTop5ListsUser = async (req, res) => {
 	await Top5List.aggregate([{ $sort: sortParam }], (err, top5Lists) => {
 		if (err) {
 			return res.status(400).json({ success: false, error: err });
-		}
-		if (!top5Lists.length) {
-			return res
-				.status(404)
-				.json({ success: false, error: `Top 5 Lists not found` });
 		}
 		top5Lists = top5Lists.filter((top5list) => {
 			if (!filter || !query) return top5list.username === req.username;
@@ -333,6 +323,70 @@ updateView = async (req, res) => {
 			});
 	});
 };
+
+updateRating = async (req, res) => {
+	Top5List.findOne({ _id: req.params.id }, (err, top5List) => {
+		if (err) {
+			return res.status(404).json({
+				err,
+				message: "Top 5 List not found!",
+			});
+		}
+		const action = req.body.action;
+		const username = req.username;
+		switch (action) {
+			case "like":
+				if (!top5List.likes.includes(username))
+					top5List.likes.push(username);
+				top5List.dislikes = top5List.dislikes.filter(
+					(name) => name !== username
+				);
+				break;
+			case "unlike":
+				top5List.likes = top5List.likes.filter(
+					(name) => name !== username
+				);
+				top5List.dislikes = top5List.dislikes.filter(
+					(name) => name !== username
+				);
+				break;
+			case "dislike":
+				if (!top5List.dislikes.includes(username))
+					top5List.dislikes.push(username);
+				top5List.likes = top5List.likes.filter(
+					(name) => name !== username
+				);
+				break;
+			case "undislike":
+				top5List.likes = top5List.likes.filter(
+					(name) => name !== username
+				);
+				top5List.dislikes = top5List.dislikes.filter(
+					(name) => name !== username
+				);
+				break;
+		}
+		console.log(top5List);
+		top5List
+			.save()
+			.then(() => {
+				console.log("SUCCESS!!!");
+				return res.status(200).json({
+					success: true,
+					id: top5List._id,
+					message: "Successfully Added Rating",
+				});
+			})
+			.catch((error) => {
+				console.log("FAILURE: " + JSON.stringify(error));
+				return res.status(404).json({
+					error,
+					message: "Server Error",
+				});
+			});
+	});
+};
+
 module.exports = {
 	createTop5List,
 	updateTop5List,
@@ -343,4 +397,5 @@ module.exports = {
 	getTop5ListsUser,
 	createComment,
 	updateView,
+	updateRating,
 };
