@@ -39,11 +39,17 @@ export const createComment = (id, payload) =>
 export const incView = (id) => api.post(`/top5list/${id}/views`);
 export const updateRating = (id, payload) =>
 	api.post(`/top5list/${id}/rating`, payload);
+
 // Community List
 export const publishList = (id, payload) =>
 	api.post(`/top5list/${id}/community`, payload);
 export const getCommunityList = (params) =>
 	api.get("/community", { params: params });
+export const createCommentCommunity = (id, payload) =>
+	api.post(`/community/${id}/comments`, payload);
+export const incViewCommunity = (id) => api.post(`/community/${id}/views`);
+export const updateRatingCommunity = (id, payload) =>
+	api.post(`/community/${id}/rating`, payload);
 
 // Auth
 export const getLoggedIn = () => api.get(`/loggedIn/`);
@@ -68,6 +74,9 @@ const apis = {
 	updateRating,
 	publishList,
 	getCommunityList,
+	createCommentCommunity,
+	incViewCommunity,
+	updateRatingCommunity,
 };
 
 export default apis;

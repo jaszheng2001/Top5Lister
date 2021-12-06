@@ -353,6 +353,7 @@ publishList = async (req, res) => {
 				}
 				if (flag) commItems.push({ value: item, votes: scoring[i] });
 			}
+			commItems.sort((a, b) => b.votes - a.votes);
 			communityList.items = commItems;
 			await communityList.save();
 		}

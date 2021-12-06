@@ -466,6 +466,14 @@ function GlobalStoreContextProvider(props) {
 						payload: { query, list: response.data.data },
 					});
 				}
+			} else if (store.tab === "community") {
+				const response = await api.getCommunityList(params);
+				if (response.data.success) {
+					storeReducer({
+						type: GlobalStoreActionType.UPDATE_SEARCH,
+						payload: { query, list: response.data.data },
+					});
+				}
 			} else {
 				const response = await api.getAllTop5Lists(params);
 				if (response.data.success) {
@@ -521,10 +529,14 @@ function GlobalStoreContextProvider(props) {
 	};
 
 	store.addComment = async function (listId, comment) {
-		const response = await api.createComment(listId, { comment });
+		const response =
+			store.tab === "community"
+				? await api.createCommentCommunity(listId, { comment })
+				: await api.createComment(listId, { comment });
 		try {
 			if (response.data.success) {
 				if (store.tab === "home") store.loadListUsers();
+				else if (store.tab === "community") store.loadCommunityList();
 				else store.loadList();
 			}
 		} catch (err) {
@@ -549,9 +561,12 @@ function GlobalStoreContextProvider(props) {
 
 	store.increaseView = async function (id) {
 		try {
-			await api.incView(id);
+			store.tab === "community"
+				? await api.incViewCommunity(id)
+				: await api.incView(id);
 		} catch (error) {}
 		if (store.tab === "home") store.loadListUsers();
+		else if (store.tab === "community") store.loadCommunityList();
 		else store.loadList();
 	};
 	// New Functions
@@ -574,6 +589,14 @@ function GlobalStoreContextProvider(props) {
 						payload: { sort, list: response.data.data },
 					});
 				}
+			} else if (store.tab === "community") {
+				const response = await api.getCommunityList(params);
+				if (response.data.success) {
+					storeReducer({
+						type: GlobalStoreActionType.SORT,
+						payload: { sort, list: response.data.data },
+					});
+				}
 			} else {
 				const response = await api.getAllTop5Lists(params);
 				if (response.data.success) {
@@ -588,8 +611,11 @@ function GlobalStoreContextProvider(props) {
 
 	store.updateRating = async function (id, action) {
 		try {
-			await api.updateRating(id, { action });
+			store.tab === "community"
+				? await api.updateRatingCommunity(id, { action })
+				: await api.updateRating(id, { action });
 			if (store.tab === "home") store.loadListUsers();
+			else if (store.tab === "community") store.loadCommunityList();
 			else store.loadList();
 		} catch (err) {}
 	};

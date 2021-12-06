@@ -25,7 +25,9 @@ export default function Top5List(props) {
 								color: "#d4af36",
 							}}
 							primary={items[0].value || items[0]}
-							secondary={items[0].votes || ""}
+							secondary={
+								items[0].votes ? items[0].votes + " votes" : ""
+							}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -39,7 +41,9 @@ export default function Top5List(props) {
 								color: "#d4af36",
 							}}
 							primary={items[1].value || items[1]}
-							secondary={items[1].votes || ""}
+							secondary={
+								items[1].votes ? items[1].votes + " votes" : ""
+							}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -53,7 +57,9 @@ export default function Top5List(props) {
 								fontSize: ".7rem",
 							}}
 							primary={items[2].value || items[2]}
-							secondary={items[2].votes || ""}
+							secondary={
+								items[2].votes ? items[2].votes + " votes" : ""
+							}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -67,7 +73,9 @@ export default function Top5List(props) {
 								fontSize: ".7rem",
 							}}
 							primary={items[3].value || items[3]}
-							secondary={items[3].votes || ""}
+							secondary={
+								items[3].votes ? items[3].votes + " votes" : ""
+							}
 						/>
 					</ListItem>
 					<ListItem sx={listItemStyle}>
@@ -81,7 +89,9 @@ export default function Top5List(props) {
 								fontSize: ".7rem",
 							}}
 							primary={items[4].value || items[4]}
-							secondary={items[4].votes || ""}
+							secondary={
+								items[4].votes ? items[4].votes + " votes" : ""
+							}
 						/>
 					</ListItem>
 				</List>

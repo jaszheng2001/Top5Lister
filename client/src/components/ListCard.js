@@ -117,7 +117,9 @@ export default function ListCard(props) {
 				)}
 			</CardContent>
 			<CardContent sx={{ ...cardContentStyle, paddingTop: 0 }}>
-				<Typography variant="p">By: {list.username}</Typography>
+				<Typography variant="p">
+					{list.username ? "By: " + list.username : ""}
+				</Typography>
 				<Typography variant="p">Published: January 2021</Typography>
 			</CardContent>
 			<CardActions disableSpacing sx={{ padding: "0 10px" }}>
