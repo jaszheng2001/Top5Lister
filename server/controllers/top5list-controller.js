@@ -143,7 +143,12 @@ deleteTop5List = async (req, res) => {
 			}
 			commItems.sort((a, b) => b.votes - a.votes);
 			communityList.items = commItems;
-			await communityList.save();
+			communityList.publishDate = new Date();
+			if (commItems[0] && commItems[0].votes === 0)
+				await CommunityList.findOneAndDelete({
+					_id: communityList._id,
+				});
+			else await communityList.save();
 		}
 
 		Top5List.findOneAndDelete({ _id: req.params.id }, () => {
@@ -356,6 +361,7 @@ publishList = async (req, res) => {
 				dislikes: [],
 				views: 0,
 				comments: [],
+				publishDate: new Date(),
 			});
 			await newCommList.save();
 		} else {
@@ -379,6 +385,7 @@ publishList = async (req, res) => {
 			}
 			commItems.sort((a, b) => b.votes - a.votes);
 			communityList.items = commItems;
+			communityList.publishDate = new Date();
 			await communityList.save();
 		}
 		top5List.name = name;

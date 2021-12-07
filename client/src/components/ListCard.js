@@ -85,7 +85,7 @@ export default function ListCard(props) {
 				padding: "0 15px 15px 15px",
 				boxSizing: "border-box",
 				borderRadius: "10px",
-				bgcolor: "#d4d4f5",
+				bgcolor: list.published ? "linen" : "#d4d4f5",
 			}}
 		>
 			<CardContent sx={cardContentStyle}>
@@ -102,6 +102,7 @@ export default function ListCard(props) {
 							aria-label="edit"
 							size="large"
 							onClick={handleEdit}
+							disabled={list.published}
 						>
 							<EditIcon fontSize="inherit" />
 						</IconButton>
@@ -120,7 +121,9 @@ export default function ListCard(props) {
 				<Typography variant="p">
 					{list.username ? "By: " + list.username : ""}
 				</Typography>
-				<Typography variant="p">Published: January 2021</Typography>
+				<Typography variant="p">
+					Updated: {new Date(list.updatedAt).toDateString()}
+				</Typography>
 			</CardContent>
 			<CardActions disableSpacing sx={{ padding: "0 10px" }}>
 				<div id="rate-btn-wrapper">
