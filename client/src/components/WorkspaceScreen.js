@@ -16,12 +16,16 @@ import ErrorModal from "./ErrorModal";
 */
 function WorkspaceScreen(props) {
 	const { store } = useContext(GlobalStoreContext);
-	const [disableSave, setDisableSave] = useState(false);
-	const [disablePublish, setDisablePublish] = useState(true);
 	const [list, setList] = useState(
 		store.currentList !== null ? { ...store.currentList } : {}
 	);
-
+	const [disableSave, setDisableSave] = useState(false);
+	const [disablePublish, setDisablePublish] = useState(
+		list.items.some((item) => item.trim().length === 0) ||
+			list.name.trim().length === 0 ||
+			new Set(list.items.map((item) => item.trim().toLowerCase()))
+				.size !== 5
+	);
 	const editList = (index, value) => {
 		list.items[index] = value.trim();
 		console.log(list.name);
@@ -29,14 +33,26 @@ function WorkspaceScreen(props) {
 
 		if (
 			list.items.some((item) => item.trim().length === 0) ||
-			list.name.trim().length === 0
+			list.name.trim().length === 0 ||
+			new Set(list.items.map((item) => item.trim().toLowerCase()))
+				.size !== 5 ||
+			store.idNamePairs
+				.filter((item) => item.published === true)
+				.map((e) => e.name.toLowerCase())
+				.includes(list.name.trim().toLowerCase())
 		) {
-			setDisableSave(true);
+			setDisablePublish(true);
 		} else if (
 			list.items.every((item) => item.trim().length !== 0) &&
-			list.name.trim().length !== 0
+			list.name.trim().length !== 0 &&
+			new Set(list.items.map((item) => item.trim().toLowerCase()))
+				.size === 5 &&
+			!store.idNamePairs
+				.filter((item) => item.published === true)
+				.map((e) => e.name.toLowerCase())
+				.includes(list.name.trim().toLowerCase())
 		) {
-			setDisableSave(false);
+			setDisablePublish(false);
 		}
 	};
 
@@ -44,16 +60,35 @@ function WorkspaceScreen(props) {
 		list.name = event.target.value.trim();
 		console.log(event.target.value);
 		console.log(list.items);
+		if (list.name.trim().length === 0) setDisableSave(true);
+		else setDisableSave(false);
+		console.log(
+			store.idNamePairs
+				.filter((item) => item.published === true)
+				.map((e) => e.name.toLowerCase())
+		);
 		if (
 			list.items.some((item) => item.trim().length === 0) ||
-			list.name.trim().length === 0
+			list.name.trim().length === 0 ||
+			new Set(list.items.map((item) => item.trim().toLowerCase()))
+				.size !== 5 ||
+			store.idNamePairs
+				.filter((item) => item.published === true)
+				.map((e) => e.name.toLowerCase())
+				.includes(list.name.trim().toLowerCase())
 		) {
-			setDisableSave(true);
+			setDisablePublish(true);
 		} else if (
 			list.items.every((item) => item.trim().length !== 0) &&
-			list.name.trim().length !== 0
+			list.name.trim().length !== 0 &&
+			new Set(list.items.map((item) => item.trim().toLowerCase()))
+				.size === 5 &&
+			!store.idNamePairs
+				.filter((item) => item.published === true)
+				.map((e) => e.name.toLowerCase())
+				.includes(list.name.trim().toLowerCase())
 		) {
-			setDisableSave(false);
+			setDisablePublish(false);
 		}
 	};
 
@@ -161,6 +196,7 @@ function WorkspaceScreen(props) {
 							fontWeight: 600,
 						}}
 						onClick={handlePublish}
+						disabled={disablePublish}
 					>
 						Publish
 					</Button>
