@@ -235,7 +235,7 @@ getTop5ListsUser = async (req, res) => {
 				if (!value) return true;
 				value = value.toLowerCase();
 				return (
-					value.includes(query.toLowerCase()) &&
+					value.startsWith(query.toLowerCase()) &&
 					top5list.username === req.username
 				);
 			}

@@ -50,7 +50,8 @@ export default function ListCard(props) {
 	const handleExpandClick = () => {
 		setExpanded(!expanded);
 		if (!expanded) {
-			store.increaseView(list._id);
+			if (auth.user.email !== list.ownerEmail)
+				store.increaseView(list._id);
 		}
 	};
 
