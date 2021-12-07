@@ -80,14 +80,14 @@ registerUser = async (req, res) => {
 		const savedUser = await newUser.save();
 
 		// LOGIN THE USER
-		const token = auth.signToken(savedUser);
+		// const token = auth.signToken(savedUser);
 
 		await res
-			.cookie("token", token, {
-				httpOnly: true,
-				secure: true,
-				sameSite: "none",
-			})
+			// .cookie("token", token, {
+			// 	httpOnly: true,
+			// 	secure: true,
+			// 	sameSite: "none",
+			// })
 			.status(200)
 			.json({
 				success: true,
@@ -107,14 +107,14 @@ registerUser = async (req, res) => {
 
 loginUser = async (req, res) => {
 	try {
-		const { email, password } = req.body;
-		if (!email || !password) {
+		const { username, password } = req.body;
+		if (!username || !password) {
 			return res
 				.status(400)
 				.json({ errorMessage: "Please enter all required fields." });
 		}
 		// Try to find User
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ username });
 		if (!user) {
 			return res
 				.status(400)

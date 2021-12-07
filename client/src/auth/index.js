@@ -36,13 +36,13 @@ function AuthContextProvider(props) {
 					// guest: auth.guest,
 				});
 			}
-			case AuthActionType.REGISTER_USER: {
-				return setAuth({
-					user: payload.user,
-					loggedIn: true,
-					// guest: false,
-				});
-			}
+			// case AuthActionType.REGISTER_USER: {
+			// 	return setAuth({
+			// 		user: payload.user,
+			// 		loggedIn: true,
+			// 		// guest: false,
+			// 	});
+			// }
 			case AuthActionType.LOGIN_USER: {
 				return setAuth({
 					user: payload.user,
@@ -84,14 +84,14 @@ function AuthContextProvider(props) {
 		try {
 			const response = await api.registerUser(userData);
 			if (response.status === 200) {
-				authReducer({
-					type: AuthActionType.REGISTER_USER,
-					payload: {
-						user: response.data.user,
-					},
-				});
-				history.push("/");
-				store.loadListUsers();
+				// authReducer({
+				// 	type: AuthActionType.REGISTER_USER,
+				// 	payload: {
+				// 		user: response.data.user,
+				// 	},
+				// });
+				history.push("/login");
+				// store.loadListUsers();
 			}
 		} catch (err) {
 			store.showErr(err.response.status, err.response.data.errorMessage);

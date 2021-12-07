@@ -122,7 +122,10 @@ export default function ListCard(props) {
 					{list.username ? "By: " + list.username : ""}
 				</Typography>
 				<Typography variant="p">
-					Updated: {new Date(list.updatedAt).toDateString()}
+					{list.published || store.tab === "community"
+						? "Published: " +
+						  new Date(list.updatedAt).toDateString()
+						: ""}
 				</Typography>
 			</CardContent>
 			<CardActions disableSpacing sx={{ padding: "0 10px" }}>

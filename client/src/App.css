@@ -170,7 +170,7 @@ body {
 	height: 90%;
 	display: flex;
 	flex-direction: column;
-	overflow: scroll;
+	overflow: auto;
 }
 
 .list-card,
