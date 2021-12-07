@@ -217,7 +217,7 @@ function GlobalStoreContextProvider(props) {
 					tab: payload.newTab,
 					queryType: payload.queryType,
 					query: null,
-					sort: store.sort,
+					sort: null,
 				});
 			}
 			case GlobalStoreActionType.UPDATE_SEARCH: {

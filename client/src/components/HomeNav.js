@@ -11,8 +11,12 @@ export default function HomeNav() {
 	const { store } = useContext(GlobalStoreContext);
 	console.log("Home Screen was rendered");
 	useEffect(() => {
-		store.loadListUsers();
+		store.updateTab("home", "name");
 	}, []);
+
+	useEffect(() => {
+		store.loadListUsers();
+	}, [store.tab]);
 
 	function handleCreateNewList() {
 		store.createNewList();

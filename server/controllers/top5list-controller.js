@@ -206,7 +206,7 @@ getTop5Lists = async (req, res) => {
 				value = value.toLowerCase();
 				return value === query.toLowerCase();
 			}
-			return top5list[filter] === query;
+			return top5list[filter] === query && top5list.published === true;
 		});
 		return res.status(200).json({ success: true, data: top5Lists });
 	}).catch((err) => console.log(err));

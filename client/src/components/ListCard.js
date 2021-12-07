@@ -85,7 +85,10 @@ export default function ListCard(props) {
 				padding: "0 15px 15px 15px",
 				boxSizing: "border-box",
 				borderRadius: "10px",
-				bgcolor: list.published ? "linen" : "#d4d4f5",
+				bgcolor:
+					store.tab === "home" && !list.published
+						? "linen"
+						: "#d4d4f5",
 			}}
 		>
 			<CardContent sx={cardContentStyle}>

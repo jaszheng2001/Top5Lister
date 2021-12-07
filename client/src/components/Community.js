@@ -9,8 +9,12 @@ export default function AllList() {
 	const { store } = useContext(GlobalStoreContext);
 	console.log("Home Screen was rendered");
 	useEffect(() => {
-		store.loadCommunityList();
+		store.updateTab("community", "name");
 	}, []);
+
+	useEffect(() => {
+		store.loadCommunityList();
+	}, [store.tab]);
 
 	let listCard = "";
 	if (store) {
